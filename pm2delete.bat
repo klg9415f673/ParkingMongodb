@@ -1,1 +1,0 @@
-pm2 delete C:\Users\randy\Desktop\ParkingMongodb\index.js 
