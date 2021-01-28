@@ -1,6 +1,7 @@
-node_modules
-pm2delete.bat
-pm2start.bat
-setup.js
+./node_modules/
+./pm2delete.bat
+./pm2start.bat
+./setup.js
+./RawData/
 
 
