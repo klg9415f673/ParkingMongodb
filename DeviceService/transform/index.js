@@ -29,7 +29,7 @@ exports.hex2int16=(hexx)=>{  //hex 轉 int16 ,
     return num; 
 }
 
-exports.hex2uint16=(hexx)=>{  //hex 轉 int16 , 
+exports.hex2uint16=(hexx)=>{  //hex 轉 uint16 , 
     var hex = hexx.toString();
     var str = '';
     var num ;
@@ -39,6 +39,19 @@ exports.hex2uint16=(hexx)=>{  //hex 轉 int16 ,
     num = parseInt(str)
 
     return num; 
+}
+
+exports.hex2uint8=(hexx)=>{  //hex 轉 uint8 , 
+    var hex = hexx.toString();
+    var str = '';
+    var num ;
+    for (var i = 0; (i < hex.length); i += 4)
+        str += parseInt(hex.toString().substr(i, 4), 16);
+    
+    num = parseInt(str)
+
+    return num; 
+
 }
 
 exports.hex2int8=(hexx)=>{  //hex 轉 int8 , 

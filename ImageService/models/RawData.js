@@ -17,7 +17,7 @@ const RawDataSchema = mongoose.Schema({
         RSSI:{
             RSSI_F:String,
             RSSI_B:String},
-        SolarVoltage:String,
+        SolarVoltage:Number,
         Temperature:String,     
         status:String
     },

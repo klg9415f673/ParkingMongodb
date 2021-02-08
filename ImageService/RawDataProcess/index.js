@@ -25,7 +25,7 @@ class RawDataProcess {
             Side: transform.hex2string(this.data.substr(18, 2)),             
             SN: this.data.substr(20, 4), 
             ImgPath: this.ComposePicture(),
-            Resolution:`${transform.hex2uint16(datainfo.substr(10, 4))}x${transform.hex2uint16(this.data.substr(6, 4))}`
+            Resolution:`${transform.hex2uint16(datainfo.substr(10, 4))}x${transform.hex2uint16(datainfo.substr(6, 4))}`
         } 
 
         var Device = {
@@ -37,7 +37,7 @@ class RawDataProcess {
                     RSSI:{
                         RSSI_F:transform.hex2int8(this.data.substr(40, 2)),
                         RSSI_B:transform.hex2int8(this.data.substr(42, 2))},
-                    SolarVoltage:this.data.substr(44, 2),
+                    SolarVoltage:this.data.substr(44, 2)/10,
                     Temperature:this.data.substr(46, 2),     
                     status:this.data.substr(48, 4)
                 }

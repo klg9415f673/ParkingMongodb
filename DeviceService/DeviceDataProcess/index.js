@@ -12,7 +12,7 @@ class DeviceDataProcess {
  
 
     async Decode() {
-
+        
         var Device = {
             mac:{
                 mac: this.data.substr(6, 12) ,
@@ -22,7 +22,7 @@ class DeviceDataProcess {
                 Longitude:this.data.substr(42,10) ,
                 Latitude:this.data.substr(52,8) ,
                 Height:transform.hex2int8(this.data.substr(60,2)) ,
-                Power:this.data.substr(62,2) ,
+                Power:(2+(transform.hex2uint8(this.data.substr(62,2))/100)).toFixed(2) ,
                 IMEI:this.data.substr(64,16) ,
                 IMSI:this.data.substr(80,16) ,                
                 CSQ:this.data.substr(96,2) },   
