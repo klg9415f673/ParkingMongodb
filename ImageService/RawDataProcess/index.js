@@ -39,7 +39,7 @@ class RawDataProcess {
                         RSSI_B:transform.hex2int8(this.data.substr(42, 2))},
                     SolarVoltage:this.data.substr(44, 2)/10,
                     Temperature:this.data.substr(46, 2),     
-                    status:this.data.substr(48, 4)
+                    status:this.status_analysis(this.data.substr(48, 4))
                 }
 
         var imform={
@@ -49,6 +49,32 @@ class RawDataProcess {
 
         return imform
             
+    }
+
+    status_analysis(raw_data){
+        this.raw_data = raw_data
+        switch(raw_data){
+            case "0100":
+                this.status = "初始化";
+                break;
+            case "0200":
+                this.status = "占用";
+                break;
+            case "0300":
+                this.status = "空位";
+                break;
+            case "0400":
+                this.status = "磁場溢出";
+                break;
+            case "0500":
+                this.status = "報平安";
+                break;
+
+        }
+
+        return this.status;
+
+
     }
 
     ComposePicture(){
