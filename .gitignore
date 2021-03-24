@@ -3,6 +3,6 @@ pm2delete.bat
 pm2start.bat
 setup.js
 RawData
-error_log.txt
+error_log
 
 
