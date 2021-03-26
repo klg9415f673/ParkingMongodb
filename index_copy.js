@@ -144,13 +144,13 @@ server.on('message', async function (message, remote) {
 									return console.error('readFile',err);
 								}
 								Data = cameradata.toString('hex')
-								var DataArr = Data.split(Data.substr(0,24));
+								var DataArr = Data.split(Data.substr(0,22));
 								var newarr =[]
 								
 								DataArr.forEach(element => { 
 									if(element!=""){
 										
-										let msg = Buffer.from(transform.stringToHex(Data.substr(0,24) + element))
+										let msg = Buffer.from(transform.stringToHex(Data.substr(0,22) + element))
 										let NowNumber = transform.hex2int16(element.substr(0,2))
 										newarr.splice(NowNumber-1, 0, (msg.toString('hex')));
 									}
@@ -166,14 +166,14 @@ server.on('message', async function (message, remote) {
 							if(Status === true){
 								server.send('okresend',remote.port,remote.address);
 								UploadImage(filename);
-								ImageData(filename);
+								//ImageData(filename);
 							}
 						break;
 						case "ee":
 							if(message.toString('hex').indexOf('ffd9')!=-1){
 								fs.readFile(filename, function (err, cameradata){
 									cameraData = String(cameradata.toString('hex'))
-									DataArr = cameraData.split(cameraData.substr(0,24));
+									DataArr = cameraData.split(cameraData.substr(0,22));
 									var verifydata= VerifyData(DataArr);
 							
 		
@@ -192,7 +192,7 @@ server.on('message', async function (message, remote) {
 										case true :
 											server.send('oksend',remote.port,remote.address);
 											UploadImage(filename);
-											ImageData(filename);
+											//ImageData(filename);
 											break;
 									}
 								
