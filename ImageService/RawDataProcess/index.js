@@ -1,6 +1,6 @@
-var transform = require('../transform');
-var fs = require('fs')
-var moment = require('moment');
+const transform = require('../transform');
+const fs = require('fs')
+const moment = require('moment');
 const tz = require('moment-timezone');
 
 class RawDataProcess {
@@ -13,7 +13,7 @@ class RawDataProcess {
 
     Decode() {      
         var mac = this.data.substr(6, 12)
-        var SN = this.data.substr(20, 4)
+        var SN = this.data.substr(18, 4)
         var MACDirPath = `E:\\ParkingUploadPicture\\${mac}\\`
         this.mkdir(MACDirPath);
 
@@ -21,30 +21,36 @@ class RawDataProcess {
         this.mkdir(SNDirPath);    
         var datainfo = this.data.split('ffc0')[1]
         var context = {
-            data:this.data,  
-            Side: transform.hex2string(this.data.substr(18, 2)),             
-            SN: this.data.substr(20, 4), 
+            data:this.data,       
+            SN: this.data.substr(18, 4), 
             ImgPath: this.ComposePicture(),
             Resolution:`${transform.hex2uint16(datainfo.substr(10, 4))}x${transform.hex2uint16(datainfo.substr(6, 4))}`
         } 
 
-        var Device = {
-                    mac:this.data.substr(6, 12),
-                    AMR:{
-                        AMR:transform.hex2uint16(this.data.substr(28, 4)),
-                        AMR_F:transform.hex2uint16(this.data.substr(32, 4)),
-                        AMR_B:transform.hex2uint16(this.data.substr(36, 4))},
-                    RSSI:{
-                        RSSI_F:transform.hex2int8(this.data.substr(40, 2)),
-                        RSSI_B:transform.hex2int8(this.data.substr(42, 2))},
-                    SolarVoltage:this.data.substr(44, 2)/10,
-                    Temperature:this.data.substr(46, 2),     
-                    status:this.status_analysis(this.data.substr(48, 4))
+        var Parkinglot_parameter = {
+                MAC:mac,
+                Device_paramater:{
+                    Front:{
+                        AMR_F:transform.hex2uint16(this.data.substr(30,4)),
+                        RSSI_F:transform.hex2int8(this.data.substr(38,2)),
+                        SolarVoltage_F:this.data.substr(42,2)/10,
+                        Temperature_F:this.data.substr(46,2),
+                    },
+                    Back:{
+                        AMR_B:transform.hex2uint16(this.data.substr(34,4)),
+                        RSSI_B:transform.hex2int8(this.data.substr(40,2)),
+                        SolarVoltage_B:this.data.substr(44,2)/10,
+                        Temperature_B:this.data.substr(48,2),
+                    },
+        
+                },   
+                parkinglot : this.data.substr(26, 4),             
+                parkinglot_status:status_analysis(this.data.substr(50,2)),
                 }
 
         var imform={
                     context:context,
-                    Device:Device
+                    Parkinglot_parameter:Parkinglot_parameter
                 }
 
         return imform
@@ -54,20 +60,23 @@ class RawDataProcess {
     status_analysis(raw_data){
         this.raw_data = raw_data
         switch(raw_data){
-            case "0100":
-                this.status = "初始化";
+            case "00":
+                status = "初始化";
                 break;
-            case "0200":
-                this.status = "占用";
+            case "01":
+                status = "占用";
                 break;
-            case "0300":
-                this.status = "空位";
+            case "02":
+                status = "空位";
+                break;  
+            case "03":
+                status = "未知";
                 break;
-            case "0400":
-                this.status = "磁場溢出";
+            case "04":
+                status = "磁場溢出";
                 break;
-            case "0500":
-                this.status = "報平安";
+            case "05":
+                status = "報平安";
                 break;
 
         }
@@ -80,14 +89,14 @@ class RawDataProcess {
     ComposePicture(){
        
         var allrawdata = ""
-        var Image = this.data.split(this.data.substr(0, 24));
+        var Image = this.data.split(this.data.substr(0, 22));
         Image.forEach((temp) => {
                         if (temp != "") {
-                            allrawdata = allrawdata + temp.substr(28); // 8是順序碼的長度
+                            allrawdata = allrawdata + temp.substr(30); // 8是順序碼的長度
                         }
                     })
         var mac = this.data.substr(6, 12);
-        var SN = this.data.substr(20, 4);
+        var SN = this.data.substr(18, 4);
         var path = `E:\\ParkingUploadPicture\\${mac}\\${SN}\\${moment().tz("Asia/Taipei").format("YYYYMMDD-HHmmss")}.jpg`
         var Image_buffer = Buffer.from(transform.stringToHex(allrawdata));
         setTimeout(() => {
@@ -106,7 +115,7 @@ class RawDataProcess {
 
 
     mkdir(path){
-        fs.exists(path, function(exists) {
+        fs.access(path, function(exists) {
             if(!exists){
                 fs.mkdirSync(path)
                 console.log(`已建立新資料夾${path}`)

@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const tz = require('moment-timezone');
 
-
 class SocketHander {
 
     constructor() {
@@ -19,32 +18,41 @@ class SocketHander {
         return RawData.find();
     }
 
-    storeRawData(data) {
+    storeRawData(data,uuid) {
 
         console.log(JSON. stringify(data));
+        var parameter = data.Parkinglot_parameter
         const newRawData = new RawData({
+            _id: uuid,
             context : {
-                data:data.context.data,  
-                Side:data.context.Side,             
+                data:data.context.data,            
                 SN: data.context.SN, 
                 ImgPath: data.context.ImgPath,
                 Resolution:data.context.Resolution
             }, 
     
-            Device : {
-                mac:data.Device.mac,
-                AMR:{
-                    AMR:data.Device.AMR.AMR,
-                    AMR_F:data.Device.AMR.AMR_F,
-                    AMR_B:data.Device.AMR.AMR_B},
-                RSSI:{
-                    RSSI_F:data.Device.RSSI.RSSI_F,
-                    RSSI_B:data.Device.RSSI.RSSI_B},
-                SolarVoltage:data.SolarVoltage,
-                Temperature:data.Temperature,     
-                status:data.status
-            },
-            timestamp:moment().valueOf()    
+            Parkinglot_parameter = {
+                MAC:parameter.MAC,
+                Device_paramater:{
+                    Front:{
+                        AMR_F:parameter.Front.AMR_F,
+                        RSSI_F:parameter.Front.RSSI_F,
+                        SolarVoltage_F:parameter.Front.SolarVoltage_F,
+                        Temperature_F:parameter.Front.Temperature_F,
+                    },
+                    Back:{
+                        AMR_B:parameter.Back.AMR_B,
+                        RSSI_B:parameter.Back.RSSI_B,
+                        SolarVoltage_B:parameter.Back.SolarVoltage_B,
+                        Temperature_B:parameter.Back.Temperature_B,
+                    },
+        
+                },   
+                parkinglot = this.data.substr(26, 4),             
+                parkinglot_status:status_analysis(this.data.substr(50,2)),
+                },
+            timestamp:moment().valueOf(),                
+            updatetime: moment().tz("Asia/Taipei").format("YYYYMMDDTHH:mm:ss.SSSZ"),
         });
 
         const doc = newRawData.save();
