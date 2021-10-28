@@ -31,25 +31,25 @@ class SocketHander {
                 Resolution:data.context.Resolution
             }, 
     
-            Parkinglot_parameter = {
+            Parkinglot_parameter : {
                 MAC:parameter.MAC,
                 Device_paramater:{
                     Front:{
-                        AMR_F:parameter.Front.AMR_F,
-                        RSSI_F:parameter.Front.RSSI_F,
-                        SolarVoltage_F:parameter.Front.SolarVoltage_F,
-                        Temperature_F:parameter.Front.Temperature_F,
+                        AMR_F:parameter.Device_paramater.Front.AMR_F,
+                        RSSI_F:parameter.Device_paramater.Front.RSSI_F,
+                        SolarVoltage_F:parameter.Device_paramater.Front.SolarVoltage_F,
+                        Temperature_F:parameter.Device_paramater.Front.Temperature_F,
                     },
                     Back:{
-                        AMR_B:parameter.Back.AMR_B,
-                        RSSI_B:parameter.Back.RSSI_B,
-                        SolarVoltage_B:parameter.Back.SolarVoltage_B,
-                        Temperature_B:parameter.Back.Temperature_B,
+                        AMR_B:parameter.Device_paramater.Back.AMR_B,
+                        RSSI_B:parameter.Device_paramater.Back.RSSI_B,
+                        SolarVoltage_B:parameter.Device_paramater.Back.SolarVoltage_B,
+                        Temperature_B:parameter.Device_paramater.Back.Temperature_B,
                     },
         
                 },   
-                parkinglot = this.data.substr(26, 4),             
-                parkinglot_status:status_analysis(this.data.substr(50,2)),
+                parkinglot : parameter.parkinglot,             
+                parkinglot_status:parameter.parkinglot_status,
                 },
             timestamp:moment().valueOf(),                
             updatetime: moment().tz("Asia/Taipei").format("YYYYMMDDTHH:mm:ss.SSSZ"),

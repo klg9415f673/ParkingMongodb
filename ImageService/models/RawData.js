@@ -30,7 +30,7 @@ const RawDataSchema = mongoose.Schema({
         parkinglot:String,             
         parkinglot_status:String,
     },
-    timestamp:Timestamp,
+    timestamp:String,
     updatetime:String,
 })
 

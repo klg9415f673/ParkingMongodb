@@ -45,7 +45,7 @@ class RawDataProcess {
         
                 },   
                 parkinglot : this.data.substr(26, 4),             
-                parkinglot_status:status_analysis(this.data.substr(50,2)),
+                parkinglot_status:this.status_analysis(this.data.substr(50,2)),
                 }
 
         var imform={
@@ -61,28 +61,27 @@ class RawDataProcess {
         this.raw_data = raw_data
         switch(raw_data){
             case "00":
-                status = "初始化";
+                this.status = "初始化";
                 break;
             case "01":
-                status = "占用";
+                this.status = "占用";
                 break;
             case "02":
-                status = "空位";
+                this.status = "空位";
                 break;  
             case "03":
-                status = "未知";
+                this.status = "未知";
                 break;
             case "04":
-                status = "磁場溢出";
+                this.status = "磁場溢出";
                 break;
             case "05":
-                status = "報平安";
+                this.status = "報平安";
                 break;
 
         }
 
         return this.status;
-
 
     }
 
@@ -116,7 +115,7 @@ class RawDataProcess {
 
     mkdir(path){
         fs.access(path, function(exists) {
-            if(!exists){
+            if(exists){
                 fs.mkdirSync(path)
                 console.log(`已建立新資料夾${path}`)
                 

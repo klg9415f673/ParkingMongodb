@@ -13,10 +13,11 @@ var tz = require('moment-timezone');
 
 server.bind('1111',IP);
 
-
 server.on('message', async function (message, remote) {
+	
 	console.log(`cilent address is:${remote.address}-${remote.port}`);
 	console.log("Now time :", moment().tz("Asia/Taipei").format("MM/DD HH:mm:ss"))
+	console.log(message)
 	// console.log(transform.hex2string(message.toString('hex')))  //PC client測試用
 	// message = transform.hex2string(message.toString('hex'))	   //PC client測試用
 
@@ -25,11 +26,11 @@ server.on('message', async function (message, remote) {
 		format = String(message)
 	}
 	if (message.toString('hex').substr(0,2) =='40'){//PKS7501
-		format = String(message)
+		format = "@"
 	}
 
 	//創建txt &寫入資料
-	var filename = './RawData/'+ remote.address +'-'+ remote.port +'.txt' ;
+	var filename = './RawData/'+ remote.address + '-'+ remote.port +'.txt' ;
 
 	switch(format){
 		case "eeee":
@@ -128,28 +129,29 @@ server.on('message', async function (message, remote) {
 			console.log(message.toString('hex'));
 			var msg = Buffer.from('!' + moment().tz("Asia/Taipei").format("MMDDHHmmss"))
 			console.log("recognize ",format)
+			console.log("send deive time check",msg)
 			server.send(msg,remote.port,remote.address)
 
-			functions.UploadDevice(message);//要加進去DEVUCEDATA裡面
+			functions.UploadDevice(message);//要加進去DEVICE DATA裡面
 			//functions.Devicedata(message); 
 			break;
 		case "client":
-			console.log(transform.hex2string(message.toString('hex')));
+			console.log("recognize ",format)
 			console.log("Server活著，可喜可賀~可喜可賀~")
 			server.send("OK",remote.port,remote.address)
 			break;
 		case "@"://PKS7501
-			console.log(message.toString('hex'));
+
 			console.log("recognize ",format)
-			UploadPKS(message);
+			functions.UploadPKS(message)
+			functions.PKS7501_data(message,server,remote)
+
 			break;
 		default:
 			console.log("Unknown Connection have Disconnected!!!");
 			server.send('Unknown format',remote.port,remote.address)
 			break;
 	}
-
-	break;
 
 
 })
